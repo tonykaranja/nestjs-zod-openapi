@@ -143,12 +143,9 @@ export class AppModule {}
 import { ZodValidationPipe } from '@wahyubucil/nestjs-zod-openapi'
 
 // controller-level
-@UsePipes(ZodValidationPipe)
-class CatsController {}
-
 class CatsController {
   // route-level
-  @UsePipes(ZodValidationPipe)
+  @UsePipes(new ZodValidationPipe(CatDto))
   async create() {}
 }
 ```
@@ -270,6 +267,7 @@ export class CatsController {
     description: 'The record has been successfully created.',
     type: CreateCatResponseDto,
   })
+  @UsePipes(new ZodValidationPipe(CatDto))
   async create(@Body() createCatDto: CatDto) {
     return CreateCatResponseDto.zodSchema.parse({
       success: true,
@@ -282,6 +280,7 @@ export class CatsController {
   @ApiOkResponse({
     type: UpdateCatDto,
   })
+  @UsePipes(new ZodValidationPipe(UpdateCatDto))
   async update(@Body() updateCatDto: UpdateCatDto) {
     return UpdateCatResponseDto.zodSchema.parse({
       success: true,
